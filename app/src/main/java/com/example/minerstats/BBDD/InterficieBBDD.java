@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.example.minerstats.Crypto.Crypto;
+import com.example.minerstats.Gpu.Gpu;
 import com.example.minerstats.Minero.Minero;
 
 import java.io.ByteArrayOutputStream;
@@ -44,113 +46,90 @@ public class InterficieBBDD {
         ajuda.close();
     }
 
-    public Minero createPeli(Minero minero) {
+    public Minero createMinero(Minero minero) {
         // insert d'una nova peli
         ContentValues values = new ContentValues();
-        values.put(AjudaPeliBBDD.CLAU_NOM, peli.getNom());
-        values.put(AjudaPeliBBDD.CLAU_COMENTARI, peli.getComentari());
-        values.put(AjudaPeliBBDD.CLAU_DATA, String.valueOf(peli.getData()));
-        values.put(AjudaPeliBBDD.CLAU_VALORACIO, peli.getValoracio());
-        values.put(AjudaPeliBBDD.CLAU_FOTO, peli.getFoto());
-        values.put(AjudaPeliBBDD.CLAU_REL_GEN, peli.getIdGenere());
-        values.put(AjudaPeliBBDD.CLAU_REL_BSO, peli.getIdBSO());
-        long insertId = bd.insert(AjudaPeliBBDD.BD_TAULA_PELI, null, values);
-        peli.setId(insertId);
-        return peli;
+        values.put(CreateBBDD.CLAU_NOM_MINERO, minero.getNom());
+        values.put(CreateBBDD.CLAU_QTYGPU, minero.getQtyGPU());
+        values.put(CreateBBDD.CLAU_REL_CRYPTO, minero.getId_crypto());
+        long insertId = bd.insert(CreateBBDD.BD_TAULA_MINERO, null, values);
+        minero.setId(insertId);
+        return minero;
     }
 
-    public ArrayList<Pelicula> getAllPelicula() {
-        ArrayList<Pelicula> pelicules = new ArrayList<Pelicula>();
-        Cursor cursor = bd.query(AjudaPeliBBDD.BD_TAULA_PELI, allColumnsPelicula, null, null, null, null, AjudaPeliBBDD.CLAU_NOM + " ASC");
+    public ArrayList<Minero> getAllMinero() {
+        ArrayList<Minero> mineros = new ArrayList<Minero>();
+        Cursor cursor = bd.query(CreateBBDD.BD_TAULA_MINERO, allColumnsMinero, null, null, null, null, CreateBBDD.CLAU_ID_MINERO + " ASC");
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Pelicula peli = cursorToPelicula(cursor);
-            pelicules.add(peli);
+            Minero minero = cursorToMinero(cursor);
+            mineros.add(minero);
             cursor.moveToNext();
         }
         // Make sure to close the cursor
         cursor.close();
-        return pelicules;
+        return mineros;
     }
 
-    public ArrayList<Pelicula> consultaPelis(String regex) {
-        ArrayList<Pelicula> pelicules = new ArrayList<Pelicula>();
-        Cursor cursor = bd.query(true, AjudaPeliBBDD.BD_TAULA_PELI, allColumnsPelicula,AjudaPeliBBDD.CLAU_NOM + " LIKE ?", new String[] { regex+"%" }, null, null, AjudaPeliBBDD.CLAU_NOM + " ASC", null);
+    //Cercador de mineros (escrit)
+    public ArrayList<Minero> consultaMinero(String regex) {
+        ArrayList<Minero> mineros = new ArrayList<Minero>();
+        Cursor cursor = bd.query(true, CreateBBDD.BD_TAULA_MINERO, allColumnsMinero,CreateBBDD.CLAU_NOM + " LIKE ?", new String[] { regex+"%" }, null, null, CreateBBDD.CLAU_NOM + " ASC", null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Pelicula peli = cursorToPelicula(cursor);
-            pelicules.add(peli);
+            Minero minero = cursorToMinero(cursor);
+            mineros.add(minero);
             cursor.moveToNext();
         }
         // Make sure to close the cursor
         cursor.close();
-        return pelicules;
+        return mineros;
     }
 
 
-    private Pelicula cursorToPelicula(Cursor cursor) {
-        Pelicula peli = new Pelicula();
-        peli.setId(cursor.getLong(0));
-        peli.setNom(cursor.getString(1));
-        peli.setComentari(cursor.getString(2));
-        peli.setData(cursor.getString(3));
-        peli.setValoracio(cursor.getFloat(4));
-        peli.setFoto(cursor.getBlob(5));
-        peli.setIdGenere(cursor.getLong(6));
-        peli.setIdBSO(cursor.getLong(7));
-        return peli;
+    private Minero cursorToMinero(Cursor cursor) {
+        Minero minero = new Minero();
+        minero.setId(cursor.getLong(0));
+        minero.setNom(cursor.getString(1));
+        minero.setQtyGPU(cursor.getInt(2));
+        minero.setId_crypto(cursor.getString(3));
+        return minero;
     }
 
-    //Retorna una pelicula
-    public Pelicula obtenirPelicula(long IDFila) throws SQLException {
-        Cursor mCursor = bd.query(true, AjudaPeliBBDD.BD_TAULA_PELI, allColumnsPelicula,AjudaPeliBBDD.CLAU_ID_PELICULA + " = " + IDFila, null, null, null, null, null);
+    //Retorna un Minero
+    public Minero obtenirMinero(long IDFila) throws SQLException {
+        Cursor mCursor = bd.query(true, CreateBBDD.BD_TAULA_MINERO, allColumnsMinero,CreateBBDD.CLAU_ID_MINERO + " = " + IDFila, null, null, null, null, null);
         if(mCursor != null) {
             mCursor.moveToFirst();
         }
-        return cursorToPelicula(mCursor);
+        return cursorToMinero(mCursor);
     }
 
-    //Modifica un contacte
-    public boolean actualitzaPelicula(long IDFila, Pelicula peli) {
+    //Modifica un minero a partir del id
+    public boolean actualitzaMinero(long IDFila, Minero minero) {
         ContentValues values = new ContentValues();
-        values.put(AjudaPeliBBDD.CLAU_NOM, peli.getNom());
-        values.put(AjudaPeliBBDD.CLAU_COMENTARI, peli.getComentari());
-        values.put(AjudaPeliBBDD.CLAU_DATA, String.valueOf(peli.getData()));
-        values.put(AjudaPeliBBDD.CLAU_VALORACIO, peli.getValoracio());
-        values.put(AjudaPeliBBDD.CLAU_FOTO, peli.getFoto());
-        values.put(AjudaPeliBBDD.CLAU_REL_GEN, peli.getIdGenere());
-        values.put(AjudaPeliBBDD.CLAU_REL_BSO, peli.getIdBSO());
-        return bd.update(AjudaPeliBBDD.BD_TAULA_PELI, values, AjudaPeliBBDD.CLAU_ID_PELICULA + " = " + IDFila, null) > 0;
+        values.put(CreateBBDD.CLAU_NOM_MINERO, minero.getNom());
+        values.put(CreateBBDD.CLAU_QTYGPU, minero.getQtyGPU());
+        values.put(CreateBBDD.CLAU_REL_CRYPTO, minero.getId_crypto());
+        return bd.update(CreateBBDD.BD_TAULA_MINERO, values, CreateBBDD.CLAU_ID_MINERO + " = " + IDFila, null) > 0;
     }
 
     //Esborra un contacte
-    public boolean esborraPelicula(long IDFila) {
-        return bd.delete(AjudaPeliBBDD.BD_TAULA_PELI, AjudaPeliBBDD.CLAU_ID_PELICULA + " = " + IDFila, null) > 0;
+    public boolean esborraMinero(long IDFila) {
+        return bd.delete(CreateBBDD.BD_TAULA_MINERO, CreateBBDD.CLAU_ID_MINERO + " = " + IDFila, null) > 0;
     }
 
-
-    // convert from bitmap to byte array
-    public static byte[] getBytes(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        return stream.toByteArray();
-    }
-
-    // convert from byte array to bitmap
-    public static Bitmap getImage(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }
 
 
     //lLISTA GÈNERES
-    public ArrayList<Genere> llistaGeneres() {
-        ArrayList<Genere> llista = new ArrayList<Genere>();
-        Cursor cursor = bd.query(AjudaPeliBBDD.BD_TAULA_GENERE, allColumnsGenere, null, null, null, null, AjudaPeliBBDD.CLAU_GENERE + " ASC");
+    public ArrayList<Crypto> getAllCrypto() {
+        ArrayList<Crypto> llista = new ArrayList<Crypto>();
+        Cursor cursor = bd.query(CreateBBDD.BD_TAULA_CRYPTO, allColumnsCrypto, null, null, null, null, CreateBBDD.CLAU_NOM + " ASC");
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Genere gen = cursorToGenere(cursor);
-            llista.add(gen);
+            Crypto crypto = cursorToCrypto(cursor);
+            llista.add(crypto);
             cursor.moveToNext();
         }
         // Make sure to close the cursor
@@ -158,86 +137,64 @@ public class InterficieBBDD {
         return llista;
     }
 
-    //pASSAR UN cURSOR A UN OBJECTE GENERE
-    private Genere cursorToGenere(Cursor cursor) {
-        Genere gen = new Genere();
-        gen.setId(cursor.getLong(0));
-        gen.setNom(cursor.getString(1));
-        return gen;
+    private Crypto cursorToCrypto(Cursor cursor) {
+        Crypto crypto = new Crypto();
+        crypto.setId(cursor.getString(0));
+        crypto.setNom(cursor.getString(1));
+        return crypto;
     }
 
-    //Retorna un genere
-    public String obtenirGenere(long IDFila) throws SQLException {
-        Cursor mCursor = bd.query(true, AjudaPeliBBDD.BD_TAULA_GENERE, allColumnsGenere,AjudaPeliBBDD.CLAU_ID_GENERE + " = " + IDFila, null, null, null, null, null);
+    //Retorna una crypto a partir de un id
+    public String obtenirCrypto(String IDFila) throws SQLException {
+        Cursor mCursor = bd.query(true, CreateBBDD.BD_TAULA_CRYPTO, allColumnsCrypto,CreateBBDD.CLAU_ID_CRYPTO + " LIKE " + IDFila, null, null, null, null, null);
         if(mCursor != null) {
             mCursor.moveToFirst();
         }
-        return cursorToGenere(mCursor).getNom();
+        return cursorToCrypto(mCursor).getNom();
     }
 
-    public BSO createBSO(BSO bso) {
+    public Gpu createGpu(Gpu gpu) {
         ContentValues values = new ContentValues();
-        values.put(AjudaPeliBBDD.CLAU_TITOL, bso.getTitol());
-        values.put(AjudaPeliBBDD.CLAU_AUTOR, bso.getAutor());
-        values.put(AjudaPeliBBDD.CLAU_DURACIO, bso.getDuracio());
-        values.put(AjudaPeliBBDD.CLAU_DATA_BSO, bso.getData());
-        values.put(AjudaPeliBBDD.CLAU_LINK, bso.getLink());
-        long insertId = bd.insert(AjudaPeliBBDD.BD_TAULA_BSO, null, values);
-        bso.setId(insertId);
-        return bso;
+        values.put(CreateBBDD.CLAU_ID_GPU, gpu.getId());
+        values.put(CreateBBDD.CLAU_NOM_GPU, gpu.getNom());
+        values.put(CreateBBDD.CLAU_REL_MINERO, gpu.getId_minero());
+        long insertId = bd.insert(CreateBBDD.BD_TAULA_GPU, null, values);
+        gpu.setId(insertId);
+        return gpu;
     }
 
     //Llista totes les BSO
-    public ArrayList<BSO> llistaBSO() {
-        ArrayList<BSO> bandes_sonores = new ArrayList<BSO>();
-        Cursor cursor = bd.query(AjudaPeliBBDD.BD_TAULA_BSO, allColumnsBSO, null, null, null, null, AjudaPeliBBDD.CLAU_ID_BSO + " ASC");
+    public ArrayList<Gpu> llistaGpu() {
+        ArrayList<Gpu> gpus = new ArrayList<Gpu>();
+        Cursor cursor = bd.query(CreateBBDD.BD_TAULA_GPU, allColumnsGPU, null, null, null, null, CreateBBDD.CLAU_ID_GPU + " ASC");
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            BSO bso = cursorToBSO(cursor);
-            bandes_sonores.add(bso);
+            Gpu gpu = cursorToGpu(cursor);
+            gpus.add(gpu);
             cursor.moveToNext();
         }
         // Make sure to close the cursor
         cursor.close();
-        return bandes_sonores;
+        return gpus;
     }
 
 
-    private BSO cursorToBSO(Cursor cursor) {
-        BSO bso = new BSO();
-        bso.setId(cursor.getLong(0));
-        bso.setTitol(cursor.getString(1));
-        bso.setAutor(cursor.getString(2));
-        bso.setDuracio(cursor.getString(3));
-        bso.setData(cursor.getString(4));
-        bso.setLink(cursor.getString(5));
-        return bso;
+    private Gpu cursorToGpu(Cursor cursor) {
+        Gpu gpu = new Gpu();
+        gpu.setId(cursor.getLong(0));
+        gpu.setNom(cursor.getString(1));
+        gpu.setId_minero(cursor.getLong(2));
+        return gpu;
     }
 
-    //Retorna una BSO
-    public BSO obtenirBSO(long IDFila) throws SQLException {
-        Cursor mCursor = bd.query(true, AjudaPeliBBDD.BD_TAULA_BSO, allColumnsBSO,AjudaPeliBBDD.CLAU_ID_BSO + " = " + IDFila, null, null, null, null, null);
+    //Retorna una Gpu
+    public Gpu obtenirGpu(long IDFila) throws SQLException {
+        Cursor mCursor = bd.query(true, CreateBBDD.BD_TAULA_GPU, allColumnsGPU,CreateBBDD.CLAU_ID_GPU + " = " + IDFila, null, null, null, null, null);
         if(mCursor != null) {
             mCursor.moveToFirst();
         }
-        return cursorToBSO(mCursor);
+        return cursorToGpu(mCursor);
     }
 
-    //Modifica un contacte
-    public boolean actualitzaBSO(long IDFila, BSO bso) {
-        ContentValues values = new ContentValues();
-        values.put(AjudaPeliBBDD.CLAU_TITOL, bso.getTitol());
-        values.put(AjudaPeliBBDD.CLAU_AUTOR, bso.getAutor());
-        values.put(AjudaPeliBBDD.CLAU_DURACIO, bso.getDuracio());
-        values.put(AjudaPeliBBDD.CLAU_DATA_BSO, bso.getData());
-        values.put(AjudaPeliBBDD.CLAU_LINK, bso.getLink());
-        return bd.update(AjudaPeliBBDD.BD_TAULA_BSO, values, AjudaPeliBBDD.CLAU_ID_BSO + " = " + IDFila, null) > 0;
-    }
-
-    //Esborra un contacte
-    public boolean esborraBSO(long IDFila) {
-        return bd.delete(AjudaPeliBBDD.BD_TAULA_BSO, AjudaPeliBBDD.CLAU_ID_BSO + " = " + IDFila, null) > 0;
-    }
-
-
+    //Falta historial!!!
 }
