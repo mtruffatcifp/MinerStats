@@ -1,6 +1,7 @@
 package com.example.minerstats.Minero;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +40,12 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_minero_detall);
         Bundle extras = getIntent().getExtras();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         idMinero = extras.getLong("idMinero");
         //idMinero = 1;
         Log.w("idMiner", idMinero+"");
@@ -49,6 +56,7 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
         editNom = findViewById(R.id.nom);
         editQtyGPU = findViewById(R.id.numGPU);
         editIp = findViewById(R.id.ip);
+
 
         //Botons i spinner
         btnTorna = (Button) findViewById(R.id.torna);
