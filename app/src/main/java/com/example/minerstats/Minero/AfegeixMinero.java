@@ -64,6 +64,8 @@ public class AfegeixMinero extends AppCompatActivity implements View.OnClickList
         ArrayAdapter<String> adapterCrypto = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, array_crypto_string);
         editCrypto.setAdapter(adapterCrypto);
 
+        editCrypto.setText("");
+        editCrypto.clearListSelection();
         spinnerCrypto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -118,7 +120,6 @@ public class AfegeixMinero extends AppCompatActivity implements View.OnClickList
         }
         // Spinner Drop down elements
         List<String> string_crypto = new ArrayList<String>();
-        string_crypto.add("");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             for (int i = 0; i < llista_crypto.size(); i++) {
                 string_crypto.add(llista_crypto.get(i).getNom() + " (" + llista_crypto.get(i).getId() + ")");

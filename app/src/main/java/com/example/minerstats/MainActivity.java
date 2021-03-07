@@ -1,7 +1,9 @@
 package com.example.minerstats;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,8 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,7 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private int ADD_CODE = 1;
     private InterficieBBDD bd;
     private ArrayList<Minero> llistaMineros;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Long> id_miner_eliminar;
     private int DETAIL_CODE_CRYPTO = 2;
     private Paint p = new Paint();
+    private View.OnClickListener onItemClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,68 @@ public class MainActivity extends AppCompatActivity {
         });
         recyclerViewMinero.setAdapter(adapterMinero);
         enableSwipe();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        // User pressed the search button
+        if (query.isEmpty()) {
+            llistaMineros();
+            return false;
+        }
+        InterficieBBDD bd;
+        bd = new InterficieBBDD(this);
+        bd.obre();
+        // Obtenim tots els vins
+        llistaMineros = bd.consultaMinero(query);
+        bd.tanca();
+        actualitzaRecycler();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        // User changed the text
+        if (newText.isEmpty()) {
+            llistaMineros();
+            return false;
+        }
+        InterficieBBDD bd;
+        bd = new InterficieBBDD(this);
+        bd.obre();
+        // Obtenim tots els vins
+        llistaMineros = bd.consultaMinero(newText);
+        bd.tanca();
+        actualitzaRecycler();
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        getMenuInflater().inflate(R.menu.menu_cerca, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if(id == R.id.ajuda){
+            startActivity(new Intent(getApplicationContext(), Help.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void llistaMineros() {

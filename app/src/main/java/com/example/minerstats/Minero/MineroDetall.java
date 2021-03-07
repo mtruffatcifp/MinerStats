@@ -22,6 +22,7 @@ import java.util.List;
 
 public class MineroDetall extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
+    private Toolbar toolbar;
     private InterficieBBDD bd;
     private ArrayList<Crypto> llista_cryptos;
 
@@ -40,11 +41,14 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_minero_detall);
         Bundle extras = getIntent().getExtras();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+
+
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         idMinero = extras.getLong("idMinero");
         //idMinero = 1;
@@ -63,6 +67,10 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
         btnEditar = (Button) findViewById(R.id.actualitza);
         btnGuardar = (Button) findViewById(R.id.guardar);
         spinnerCrypto = (Spinner) findViewById(R.id.spinnerCryptoEdit);
+
+
+        spinnerCrypto.setEnabled(false);
+        spinnerCrypto.setClickable(false);
 
         spinnerCrypto.setOnItemSelectedListener(this);
         btnTorna.setOnClickListener(this);
@@ -97,8 +105,9 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
     private void setEditTextEnabled() {
         editNom.setEnabled(true);
         editQtyGPU.setEnabled(true);
-        //editCrypto.setEnabled(true);
         editIp.setEnabled(true);
+        spinnerCrypto.setEnabled(true);
+        spinnerCrypto.setClickable(true);
     }
 
     public void showInfo(Minero m){
@@ -114,7 +123,6 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
 
         // Spinner Drop down elements
         List<String> string_crypto = new ArrayList<String>();
-        string_crypto.add("");
         int cryptoSeleccionat = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             for (int i = 0; i < llista_cryptos.size(); i++) {
@@ -128,7 +136,7 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
 
         // attaching data adapter to spinner
         spinnerCrypto.setAdapter(dataAdapter);
-        spinnerCrypto.setSelection(++cryptoSeleccionat);
+        spinnerCrypto.setSelection(cryptoSeleccionat);
     }
 
     @Override
