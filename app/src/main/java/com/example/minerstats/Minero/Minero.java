@@ -6,12 +6,14 @@ public class Minero {
     private String nom;
     private int qtyGPU;
     private String id_crypto;
+    private String ip_minero;
 
-    public Minero(long id, String nom, int qtyGPU, String id_crypto) {
+    public Minero(long id, String nom, int qtyGPU, String id_crypto, String ip_minero) {
         this.id = id;
         this.nom = nom;
         this.qtyGPU = qtyGPU;
         this.id_crypto = id_crypto;
+        this.ip_minero = ip_minero;
     }
 
     public Minero() {
@@ -49,4 +51,8 @@ public class Minero {
     public void setId_crypto(String id_crypto) {
         this.id_crypto = id_crypto;
     }
+
+    public String getIp_minero() { return ip_minero; }
+
+    public void setIp_minero(String ip_minero) { this.ip_minero = ip_minero; }
 }

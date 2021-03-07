@@ -23,10 +23,11 @@ public class CreateBBDD extends SQLiteOpenHelper {
     public static final String CLAU_NOM_MINERO = "nom";
     public static final String CLAU_QTYGPU = "qtyGPU";
     public static final String CLAU_REL_CRYPTO = "id_crypto";
+    public static final String CLAU_IP_MINERO = "ip_minero";
 
 
     public static final String BD_CREATE_MINERO = "CREATE TABLE " + BD_TAULA_MINERO + "( " + CLAU_ID_MINERO + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            CLAU_NOM_MINERO + " TEXT NOT NULL, " + CLAU_QTYGPU + " INTEGER, " + CLAU_REL_CRYPTO + " TEXT);";
+            CLAU_NOM_MINERO + " TEXT NOT NULL, " + CLAU_QTYGPU + " INTEGER, " + CLAU_REL_CRYPTO + " TEXT, " + CLAU_IP_MINERO + " TEXT NOT NULL);";
 
 
     //Declaracio taula Crypto

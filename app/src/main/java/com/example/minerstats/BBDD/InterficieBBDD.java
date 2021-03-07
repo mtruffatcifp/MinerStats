@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.example.minerstats.Crypto.Crypto;
 import com.example.minerstats.Gpu.Gpu;
@@ -22,7 +23,7 @@ public class InterficieBBDD {
     private CreateBBDD ajuda;
     private SQLiteDatabase bd;
 
-    private String[] allColumnsMinero = {CreateBBDD.CLAU_ID_MINERO, CreateBBDD.CLAU_NOM_MINERO, CreateBBDD.CLAU_QTYGPU, CreateBBDD.CLAU_REL_CRYPTO};
+    private String[] allColumnsMinero = {CreateBBDD.CLAU_ID_MINERO, CreateBBDD.CLAU_NOM_MINERO, CreateBBDD.CLAU_QTYGPU, CreateBBDD.CLAU_REL_CRYPTO, CreateBBDD.CLAU_IP_MINERO};
 
     private String[] allColumnsCrypto = {CreateBBDD.CLAU_ID_CRYPTO, CreateBBDD.CLAU_NOM};
 
@@ -52,6 +53,7 @@ public class InterficieBBDD {
         values.put(CreateBBDD.CLAU_NOM_MINERO, minero.getNom());
         values.put(CreateBBDD.CLAU_QTYGPU, minero.getQtyGPU());
         values.put(CreateBBDD.CLAU_REL_CRYPTO, minero.getId_crypto());
+        values.put(CreateBBDD.CLAU_IP_MINERO, minero.getIp_minero());
         long insertId = bd.insert(CreateBBDD.BD_TAULA_MINERO, null, values);
         minero.setId(insertId);
         return minero;
@@ -90,10 +92,13 @@ public class InterficieBBDD {
 
     private Minero cursorToMinero(Cursor cursor) {
         Minero minero = new Minero();
+
         minero.setId(cursor.getLong(0));
         minero.setNom(cursor.getString(1));
         minero.setQtyGPU(cursor.getInt(2));
         minero.setId_crypto(cursor.getString(3));
+        minero.setIp_minero(cursor.getString(4));
+        Log.w("ObjetoMinero", minero.getNom());
         return minero;
     }
 
@@ -109,9 +114,11 @@ public class InterficieBBDD {
     //Modifica un minero a partir del id
     public boolean actualitzaMinero(long IDFila, Minero minero) {
         ContentValues values = new ContentValues();
+        Log.w("aaaa", minero.getNom());
         values.put(CreateBBDD.CLAU_NOM_MINERO, minero.getNom());
         values.put(CreateBBDD.CLAU_QTYGPU, minero.getQtyGPU());
         values.put(CreateBBDD.CLAU_REL_CRYPTO, minero.getId_crypto());
+        values.put(CreateBBDD.CLAU_IP_MINERO, minero.getIp_minero());
         return bd.update(CreateBBDD.BD_TAULA_MINERO, values, CreateBBDD.CLAU_ID_MINERO + " = " + IDFila, null) > 0;
     }
 

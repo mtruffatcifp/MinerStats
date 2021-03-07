@@ -30,7 +30,7 @@ import java.util.List;
 public class AfegeixMinero extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private InterficieBBDD bd;
-    private EditText editNom, editQtyGPU;
+    private EditText editNom, editQtyGPU, editIp;
     private AutoCompleteTextView editCrypto;
     private Spinner spinnerCrypto;
     private Button btnGuardar, btnCancelar;
@@ -49,6 +49,7 @@ public class AfegeixMinero extends AppCompatActivity implements View.OnClickList
         editNom = findViewById(R.id.nomMinero);
         editQtyGPU = findViewById(R.id.qtyGPU);
         editCrypto = findViewById(R.id.editCrypto);
+        editIp = findViewById(R.id.ipMinero);
         spinnerCrypto = findViewById(R.id.spinnerCrypto);
         btnGuardar = findViewById(R.id.btnGuardar);
         btnCancelar = findViewById(R.id.btnCancelar);
@@ -68,7 +69,6 @@ public class AfegeixMinero extends AppCompatActivity implements View.OnClickList
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editCrypto.setText(spinnerCrypto.getSelectedItem().toString());
                 editCrypto.dismissDropDown();
-                Log.w("cry", "BLBLBLBLBL");
             }
 
             @Override
@@ -114,12 +114,11 @@ public class AfegeixMinero extends AppCompatActivity implements View.OnClickList
         llista_crypto = bd.getAllCrypto();
 
         for (Crypto c : llista_crypto) {
-            Log.w("btc", c.getNom());
-            array_crypto_string.add(c.getNom());
+            array_crypto_string.add(c.getNom() + " ( " + c.getId() + " )");
         }
         // Spinner Drop down elements
         List<String> string_crypto = new ArrayList<String>();
-        string_crypto.add("Selecciona criptomoneda..");
+        string_crypto.add("");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             for (int i = 0; i < llista_crypto.size(); i++) {
                 string_crypto.add(llista_crypto.get(i).getNom() + " (" + llista_crypto.get(i).getId() + ")");
@@ -133,11 +132,12 @@ public class AfegeixMinero extends AppCompatActivity implements View.OnClickList
     }
 
     public Minero generaObjecteMinero() {
-        if (!editNom.getText().toString().isEmpty() && !editQtyGPU.getText().toString().isEmpty()) {
+        if (!editNom.getText().toString().isEmpty() && !editQtyGPU.getText().toString().isEmpty() && !editIp.getText().toString().isEmpty()) {
             minero = new Minero();
             minero.setNom(editNom.getText().toString());
             minero.setQtyGPU(Integer.parseInt(editQtyGPU.getText().toString()));
             minero.setId_crypto(editCrypto.getText().toString().split("\\(")[1].replace(")", ""));
+            minero.setIp_minero(editIp.getText().toString());
         }
         return minero;
     }

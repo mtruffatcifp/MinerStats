@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -21,10 +20,11 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/nomMinero"
+                android:id="@+id/nom"
+                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nom del minero"
+                android:hint="Nom del Minero"
                 android:text=""/>
 
 
@@ -39,57 +39,59 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/qtyGPU"
-                android:hint="Quantitat GPUs"
-                android:inputType="number"
-                android:layout_width="match_parent"
+                android:id="@+id/labelGPU"
+                android:hint="Numero GPUs:"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:text=""/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear3"
-            android:layout_marginVertical="10px"
-            android:layout_marginHorizontal="10px"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <AutoCompleteTextView
-                android:layout_weight="1"
-                android:id="@+id/editCrypto"
-                android:hint="Criptomoneda"
-                android:layout_width="0dp"
-                android:layout_height= "wrap_content"/>
-            <Spinner
-                android:layout_marginRight="20dp"
-                android:layout_width="30dp"
-                android:layout_height="50dp"
-                android:id="@+id/spinnerCrypto"
-                android:spinnerMode="dropdown"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear4"
-            android:layout_marginVertical="10px"
-            android:layout_marginHorizontal="10px"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/ipMinero"
-                android:hint="Direcció IP"
-                android:inputType="number"
-                android:digits="0123456789."
-                android:layout_width="match_parent"
+                android:id="@+id/numGPU"
+                android:hint="0"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="100dp"
+                android:enabled="false"
                 android:text=""/>
+
+            <EditText
+                android:id="@+id/ip"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="IP"
+                android:enabled="false"
+                android:text="" />
 
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/cardview_light_background" />
+
+        <LinearLayout
+            android:id="@+id/linear5"
+            android:layout_marginVertical="10px"
+            android:layout_marginHorizontal="10px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Spinner android:id="@+id/spinnerCryptoEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/cardview_light_background" />
 
         <LinearLayout
             android:id="@+id/linear7"
@@ -97,22 +99,30 @@
             android:layout_marginHorizontal="10px"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="2"
+            android:weightSum="3"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnCancelar"
+                android:id="@+id/torna"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.9"
                 android:drawableLeft="@android:drawable/ic_menu_revert"
-                android:layout_weight="1"
-                android:text="Cancelar"/>
+                android:text="Enrere" />
+
             <Button
-                android:id="@+id/btnGuardar"
+                android:id="@+id/actualitza"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@android:drawable/ic_menu_edit"
+                android:layout_weight="1.2"
+                android:text="Actualitza"/>
+            <Button
+                android:id="@+id/guardar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@android:drawable/ic_menu_save"
-                android:layout_weight="1"
+                android:layout_weight="0.9"
                 android:text="Guardar"/>
         </LinearLayout>
 
