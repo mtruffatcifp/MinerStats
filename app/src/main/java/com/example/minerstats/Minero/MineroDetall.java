@@ -44,11 +44,12 @@ public class MineroDetall extends AppCompatActivity implements View.OnClickListe
 
 
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar2);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         idMinero = extras.getLong("idMinero");
         //idMinero = 1;

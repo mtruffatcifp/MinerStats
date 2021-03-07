@@ -16,6 +16,7 @@
         <activity android:name=".Help"></activity>
         <activity
             android:name=".Minero.MineroDetall"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Minero.AfegeixMinero" />
         <activity
